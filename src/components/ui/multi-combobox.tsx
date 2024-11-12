@@ -13,7 +13,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { CheckIcon, ChevronsUpDown } from "lucide-react"
+import { CheckIcon, ChevronsUpDown, X } from "lucide-react"
 import { useState } from "react"
 
 export function MultiCombobox({
@@ -40,7 +40,7 @@ export function MultiCombobox({
         id: string | number
     }) => {
         const newValue =
-            returnValue === "name" ? selectedItem.name : selectedItem.name
+            returnValue === "name" ? selectedItem.name : selectedItem.id
         const updatedValues = values?.includes(newValue)
             ? values.filter((v) => v !== newValue)
             : (values || []).concat(newValue)
@@ -61,8 +61,9 @@ export function MultiCombobox({
                     role="combobox"
                     aria-expanded={open}
                     className={cn(
-                        "w-full justify-between",
+                        "w-full justify-between font-normal text-muted-foreground",
                         isError && "!text-destructive",
+                        values && values?.length > 0 && 'font-medium text-foreground'
                     )}
                     disabled={disabled}
                 >
@@ -80,6 +81,15 @@ export function MultiCombobox({
             <PopoverContent className="w-auto p-0">
                 <Command>
                     <CommandInput placeholder={label} className="h-10" />
+                    {!!values?.length && (
+                        <span className="absolute cursor-pointer text-destructive top-1.5 right-1 p-1">
+                            <X
+                                className="text-destructive"
+                                width={16}
+                                onClick={() => setValues([])}
+                            />
+                        </span>
+                    )}
                     <CommandList>
                         <CommandEmpty>Mavjud emas</CommandEmpty>
                         <CommandGroup className="!overflow-y-scroll">

@@ -5,7 +5,7 @@ import ErrorMessage from "../ui/error-message"
 import { ClassNameValue } from "tailwind-merge"
 import { MultiCombobox } from "../ui/multi-combobox"
 
-export function FormCombobox<IForm extends FieldValues>({
+export function FormMultiCombobox<IForm extends FieldValues>({
     name,
     label,
     options,

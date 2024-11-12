@@ -43,29 +43,19 @@ export function FormDatePicker<IForm extends FieldValues>({
                 name={name}
                 control={methods.control}
                 render={({ field }) => (
-                    calendarProps?.mode === 'range' ? <DateRangePicker
+                    <DatePicker
                         calendarProps={{
                             ...calendarProps,
+                            defaultMonth:
+                                field.value ? parsedDate : undefined,
                         }}
                         date={field.value}
                         setDate={field.onChange}
                         format={format}
                         placeholder={label}
                         disabled={field.disabled || disabled}
-                    /> :
-                        <DatePicker
-                            calendarProps={{
-                                ...calendarProps,
-                                defaultMonth:
-                                    field.value ? parsedDate : undefined,
-                            }}
-                            date={field.value}
-                            setDate={field.onChange}
-                            format={format}
-                            placeholder={label}
-                            disabled={field.disabled || disabled}
-                            fullWidth
-                        />
+                        fullWidth
+                    />
                 )}
             />
             {!hideError && errors[name] && (
