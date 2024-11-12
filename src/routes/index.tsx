@@ -43,7 +43,6 @@ function HomeComponent() {
           <FormCheckbox methods={form} name='is_active' label='Is active' />
           <FormDatePicker methods={form} name='birth_date' label='Birth date' captionLayout='dropdown-buttons' fromYear={1960} toYear={new Date().getFullYear()} />
           <FormDatePicker methods={form} name='plan_date' label='Plan date' />
-          <FormDatePicker methods={form} name='plan_date_range' label='Plan dates' mode='range' />
           <FormSelect methods={form} name='gender' options={[{ name: 'Male', id: 1 }, { name: 'Female', id: 2 }]} label='Gender' />
           <FormCombobox methods={form} name='color' options={colors} label='Color' />
           <FormMultiCombobox methods={form} name='multi_colors' label='Colors' options={colors} />
@@ -63,10 +62,6 @@ const formSchema = z.object({
   phone_number: z.string({ message: 'Phone number is required' }).length(9, 'Enter correct phone number'),
   is_active: z.boolean().default(false),
   plan_date: z.string({ message: 'Plan date is required' }).min(1),
-  plan_date_range: z.object({
-    from: z.string().or(z.date()),
-    to: z.string().or(z.date())
-  }),
   birth_date: z.string({ message: "Date is required" }).min(1, { message: "Date is required" }),
   gender: z.string({ message: 'Gender is required' }).transform(t => +t),
   color: z.number({ message: 'Color is required' }).min(1),
