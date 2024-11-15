@@ -8,12 +8,24 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 
+// Create Virtual Routes
+
+const ParamsLazyImport = createFileRoute('/params')()
+
 // Create/Update Routes
+
+const ParamsLazyRoute = ParamsLazyImport.update({
+  id: '/params',
+  path: '/params',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/params.lazy').then((d) => d.Route))
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -32,6 +44,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/params': {
+      id: '/params'
+      path: '/params'
+      fullPath: '/params'
+      preLoaderRoute: typeof ParamsLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +58,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/params': typeof ParamsLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/params': typeof ParamsLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/params': typeof ParamsLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/params'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/params'
+  id: '__root__' | '/' | '/params'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ParamsLazyRoute: typeof ParamsLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ParamsLazyRoute: ParamsLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +101,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/params"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/params": {
+      "filePath": "params.lazy.tsx"
     }
   }
 }

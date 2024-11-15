@@ -1,5 +1,5 @@
 import { FieldValues, Path, UseFormReturn, Controller } from "react-hook-form";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../ui/select";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../ui/select2";
 import { ClassNameValue } from "tailwind-merge";
 import { Label } from "../ui/label";
 import ErrorMessage from "../ui/error-message";

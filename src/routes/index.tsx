@@ -2,7 +2,7 @@ import { FormCheckbox } from '@/components/form/checkbox'
 import { FormCombobox } from '@/components/form/combobox'
 import { FormDatePicker } from '@/components/form/date-picker'
 import { FormFormatNumberInput } from '@/components/form/format-number-input'
-import { FormImagePicker } from '@/components/form/img-picker'
+import { FormImagePicker } from '@/components/form/image-picker'
 import FormInput from '@/components/form/input'
 import { FormMonthPicker } from '@/components/form/month-picker'
 import { FormMultiCombobox } from '@/components/form/multi-combobox'
@@ -29,34 +29,30 @@ function HomeComponent() {
     console.log(data)
   }
 
-  console.log(form.formState.errors)
-
   return (
-    <div className='w-full'>
-      <div className='w-full max-w-lg mx-auto mt-20'>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
-          <FormImagePicker methods={form} name='photo' label='Image' />
-          <FormInput methods={form} name='name' label='Name' />
-          <FormTextarea methods={form} name='description' label='Description' />
-          <FormNumberInput methods={form} name='age' label='Age' />
-          <FormFormatNumberInput methods={form} name='phone_number' format='+998 ## ### ## ##' label='Phone number' />
-          <FormCheckbox methods={form} name='is_active' label='Is active' />
-          <FormDatePicker methods={form} name='birth_date' label='Birth date' captionLayout='dropdown-buttons' fromYear={1960} toYear={new Date().getFullYear()} />
-          <FormDatePicker methods={form} name='plan_date' label='Plan date' />
-          <FormSelect methods={form} name='gender' options={[{ name: 'Male', id: 1 }, { name: 'Female', id: 2 }]} label='Gender' />
-          <FormCombobox methods={form} name='color' options={colors} label='Color' />
-          <FormMultiCombobox methods={form} name='multi_colors' label='Colors' options={colors} />
-          <FormMonthPicker methods={form} name='month' label='Pick a month' />
-          <FormSlider methods={form} name='lang_val' label='Language level' step={1} min={1} max={5} />
-          <Button>Submit</Button>
-        </form>
-      </div>
+    <div className='w-full max-w-lg mx-auto pt-20'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+        <FormImagePicker methods={form} name='photo' label='Image' className="w-16 h-16 rounded-md object-cover" />
+        <FormInput methods={form} name='name' label='Name' />
+        <FormTextarea methods={form} name='description' label='Description' />
+        <FormNumberInput methods={form} name='age' label='Age' />
+        <FormFormatNumberInput methods={form} name='phone_number' format='+998 ## ### ## ##' label='Phone number' />
+        <FormCheckbox methods={form} name='is_active' label='Is active' />
+        <FormDatePicker methods={form} name='birth_date' label='Birth date' captionLayout='dropdown-buttons' fromYear={1960} toYear={new Date().getFullYear()} />
+        <FormDatePicker methods={form} name='plan_date' label='Plan date' />
+        <FormSelect methods={form} name='gender' options={[{ name: 'Male', id: 1 }, { name: 'Female', id: 2 }]} label='Gender' />
+        <FormCombobox methods={form} name='color' options={colors} label='Color' />
+        <FormMultiCombobox methods={form} name='multi_colors' label='Colors' options={colors} />
+        <FormMonthPicker methods={form} name='month' label='Pick a month' />
+        <FormSlider methods={form} name='lang_val' label='Language level' step={1} min={1} max={5} />
+        <Button>Submit</Button>
+      </form>
     </div>
   )
 }
 
 const formSchema = z.object({
-  photo: z.instanceof(File).or(z.string({ message: "" }).min(1)),
+  photo: z.instanceof(File, { message: "Image is required" }).or(z.string({ message: "" }).min(1)),
   name: z.string({ message: 'Name is required' }).min(5, { message: 'Name length must be at least 5' }),
   age: z.string({ message: 'Age is required' }).min(1, 'Age must be at least 1').transform(t => +t),
   phone_number: z.string({ message: 'Phone number is required' }).length(9, 'Enter correct phone number'),

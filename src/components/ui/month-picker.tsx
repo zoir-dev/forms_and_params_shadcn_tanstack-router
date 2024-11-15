@@ -3,8 +3,9 @@ import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button, buttonVariants } from "./button"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
-import { format as formatter, isValid, parse } from "date-fns"
+import { format as formatter } from "date-fns"
 import { uz } from "date-fns/locale"
+import { ClassNameValue } from "tailwind-merge"
 
 const MONTHS: Month[][] = [
     [
@@ -42,13 +43,13 @@ function MonthPicker({
     placeholder,
     format = 'yyyy/MM',
     ...props
-}: React.HTMLAttributes<HTMLDivElement> & MonthCalProps & { format?: string }) {
+}: React.HTMLAttributes<HTMLDivElement> & MonthCalProps & { format?: string, className?: ClassNameValue }) {
     return (
         <div className={cn(className)} {...props}>
             <MonthCal
                 setValue={(val) => setValue(formatter(val as Date, format))}
                 callbacks={callbacks}
-                value={value ? parse(value as string, format, new Date()) : undefined}
+                value={value}
                 onYearBackward={onYearBackward}
                 onYearForward={onYearForward}
                 variant={variant}
@@ -57,6 +58,8 @@ function MonthPicker({
                 disabledDates={disabledDates}
                 disabled={disabled}
                 placeholder={placeholder}
+                className={className}
+                {...props}
             />
         </div>
     )
@@ -75,7 +78,9 @@ function MonthCal({
     onYearForward,
     disabled,
     placeholder,
+    className
 }: MonthCalProps) {
+    const [open, setOpen] = React.useState(false)
     const [year, setYear] = React.useState<number>(
         value ? new Date(value || '')?.getFullYear() : new Date().getFullYear(),
     )
@@ -90,7 +95,6 @@ function MonthCal({
         return { year: d.getFullYear(), month: d.getMonth() }
     })
 
-    const [open, setOpen] = React.useState(false)
     return (
         <>
             <Popover open={open} onOpenChange={setOpen}>
@@ -98,13 +102,14 @@ function MonthCal({
                     <Button
                         variant={"outline"}
                         className={cn(
-                            "w-full justify-start text-left font-normal text-muted-foreground",
-                            value && "font-medium text-foreground",
+                            "justify-start text-left font-normal text-muted-foreground",
+                            value && "text-foreground",
+                            className
                         )}
                     >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {isValid(value) ?
-                            formatter(value as string, "MMMM yyyy", { locale: uz })
+                        {value ?
+                            formatter(value?.toString()?.split('/')?.join('-'), "MMMM yyyy", { locale: uz })
                             : <span>{placeholder || "Oy tanlang"}</span>}
                     </Button>
                 </PopoverTrigger>
@@ -250,7 +255,7 @@ export { MonthPicker }
 
 type MonthCalProps = {
     value?: Date | string
-    setValue: (date: Date | string | undefined) => void
+    setValue: (date: Date | string) => void
     onYearForward?: () => void
     onYearBackward?: () => void
     callbacks?: {
@@ -269,6 +274,7 @@ type MonthCalProps = {
     disabledDates?: Date[]
     disabled?: boolean
     placeholder?: string
+    className?: ClassNameValue
 }
 
 type ButtonVariant =

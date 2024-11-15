@@ -9,55 +9,64 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { useState } from "react";
+import { ClassNameValue } from "tailwind-merge";
 
 export function DatePicker({
     date,
     setDate,
+    onDateChange,
     placeholder = "Select a date",
     fullWidth,
     disabled,
-    calendarProps,
     defaultValue,
     format = 'dd/MM/yyyy',
+    className,
+    ...calendarProps
 }: {
     date: Date | string | undefined;
-    setDate: (date: Date | string | null) => void;
+    setDate?: (date?: Date | string | null | undefined) => void | undefined,
+    onDateChange?: (date?: Date) => void
     placeholder?: string;
     fullWidth?: boolean;
     disabled?: boolean;
-    calendarProps?: CalendarProps | undefined;
     defaultValue?: Date;
     format?: string;
-}) {
-    const parsedDate = date ? (format ? parse(date as string, format, new Date()) : date) : undefined;
-    const displayDate = parsedDate && isValid(parsedDate) ? formatter(parsedDate, 'dd/MM/yyyy') : placeholder;
-
+    cassName?: ClassNameValue
+} & CalendarProps) {
+    const [open, setOpen] = useState(false)
+    const value = date ? (typeof date === 'string' ? parse(date, format, new Date()) : date) : (typeof defaultValue === 'string' ? parse(defaultValue, format, new Date()) : defaultValue)
+    const displayedDate = value ? formatter(value, 'dd/MM/yyyy') : placeholder
     return (
-        <Popover>
-            <PopoverTrigger asChild>
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild onClick={() => setOpen(true)}>
                 <Button
                     variant="outline"
                     className={cn(
                         "w-[280px] justify-start text-left font-normal",
-                        !parsedDate && "text-muted-foreground",
+                        !date && "text-muted-foreground",
                         fullWidth && "w-full",
+                        className
                     )}
                     disabled={disabled}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {displayDate}
+                    {displayedDate}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
                 <Calendar
                     {...calendarProps}
                     mode="single"
-                    selected={new Date(parsedDate || defaultValue || '')}
+                    defaultMonth={value}
+                    selected={value}
                     onSelect={(newDate) => {
+                        setOpen(false)
                         if (newDate && isValid(new Date(newDate))) {
-                            setDate(format ? formatter(new Date(newDate), format) : newDate);
+                            setDate?.(format ? formatter(new Date(newDate), format) : newDate);
+                            onDateChange?.()
                         } else {
-                            setDate(null);
+                            setDate?.(null);
                         }
                     }}
                 />

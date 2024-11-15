@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./select"
+} from "./select2"
 import { uz } from "date-fns/locale"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
@@ -32,7 +32,6 @@ function Calendar({
     } as React.ChangeEvent<HTMLSelectElement>
     _e(_event)
   }
-
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}

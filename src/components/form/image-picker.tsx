@@ -12,7 +12,8 @@ export function FormImagePicker<IForm extends FieldValues>({
     disabled,
     methods,
     hideError = false,
-    className
+    className,
+    avatar
 }: ImagePickerProps<IForm>) {
     const { control, formState: { errors } } = methods
     return (
@@ -22,16 +23,26 @@ export function FormImagePicker<IForm extends FieldValues>({
                 control={control}
                 render={({ field }) => (
                     <div className="relative">
-                        <SeeInView url={typeof field.value === 'string' ? field.value : (field.value && URL.createObjectURL(field.value))}>
-                            <Avatar className={`scale-150 mb-4 ${className}`}>
+                        {avatar ? <Avatar className={`scale-150 mb-4 ${className}`}>
+                            {field.value && <SeeInView url={typeof field.value === 'string' ? field.value : (field.value && URL.createObjectURL(field.value))}>
                                 <AvatarImage
                                     src={typeof field.value === 'string' ? field.value : (field.value && URL.createObjectURL(field.value))}
                                     alt="Selected Image"
                                     className="object-cover"
                                 />
-                                <AvatarFallback>Img</AvatarFallback>
-                            </Avatar>
-                        </SeeInView>
+                            </SeeInView>}
+                            <AvatarFallback>Img</AvatarFallback>
+                        </Avatar> :
+                            <>
+                                {field.value ?
+                                    <SeeInView url={typeof field.value === 'string' ? field.value : (field.value && URL.createObjectURL(field.value))}>
+                                        <img src={typeof field.value === 'string' ? field.value : (field.value && URL.createObjectURL(field.value))} alt="Selected Image" className={`${className}` || ''} />
+                                    </SeeInView>
+                                    :
+                                    <div className={`${className} bg-secondary`}></div>
+                                }
+                            </>
+                        }
                         <input
                             type="file"
                             id={name}
@@ -49,7 +60,7 @@ export function FormImagePicker<IForm extends FieldValues>({
                 )}
             />
             {label && (
-                <Label htmlFor={name} className={cn(!!errors?.[name] && 'text-destructive', 'cursor-pointer')}>
+                <Label htmlFor={name} className={cn(!!errors?.[name] && 'text-destructive', 'cursor-pointer pt-2')}>
                     {label}
                 </Label>
             )}
@@ -72,4 +83,5 @@ interface ImagePickerProps<IForm extends FieldValues> {
     methods: UseFormReturn<IForm>
     hideError?: boolean
     className?: ClassNameValue
+    avatar?: boolean
 }

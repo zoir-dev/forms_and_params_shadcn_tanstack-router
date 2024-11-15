@@ -63,7 +63,7 @@ export function MultiCombobox({
                     className={cn(
                         "w-full justify-between font-normal text-muted-foreground",
                         isError && "!text-destructive",
-                        values && values?.length > 0 && 'font-medium text-foreground'
+                        values && values?.length > 0 && 'text-foreground'
                     )}
                     disabled={disabled}
                 >
@@ -82,11 +82,10 @@ export function MultiCombobox({
                 <Command>
                     <CommandInput placeholder={label} className="h-10" />
                     {!!values?.length && (
-                        <span className="absolute cursor-pointer text-destructive top-1.5 right-1 p-1">
+                        <span className="absolute cursor-pointer text-destructive top-1.5 right-1 p-1" onClick={() => { setValues([]); setOpen(false) }}>
                             <X
                                 className="text-destructive"
                                 width={16}
-                                onClick={() => setValues([])}
                             />
                         </span>
                     )}

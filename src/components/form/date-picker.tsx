@@ -4,8 +4,6 @@ import { Label } from "../ui/label"
 import { cn } from "@/lib/utils"
 import { ClassNameValue } from "tailwind-merge"
 import ErrorMessage from "../ui/error-message"
-import { parse } from "date-fns"
-import { DateRangePicker } from "../ui/date-range-picker"
 import { DatePicker } from "../ui/date-picker"
 
 interface IProps<IForm extends FieldValues> {
@@ -30,8 +28,6 @@ export function FormDatePicker<IForm extends FieldValues>({
     const {
         formState: { errors },
     } = methods
-    const value = methods.getValues(name)
-    const parsedDate = (value && calendarProps?.mode !== 'range') ? (format ? parse(value as string, format, new Date()) : value) : undefined;
     return (
         <fieldset className="flex flex-col gap-2">
             {label && (
@@ -44,17 +40,14 @@ export function FormDatePicker<IForm extends FieldValues>({
                 control={methods.control}
                 render={({ field }) => (
                     <DatePicker
-                        calendarProps={{
-                            ...calendarProps,
-                            defaultMonth:
-                                field.value ? parsedDate : undefined,
-                        }}
                         date={field.value}
                         setDate={field.onChange}
                         format={format}
                         placeholder={label}
                         disabled={field.disabled || disabled}
                         fullWidth
+                        {...calendarProps}
+                        defaultMonth={field.value ? new Date(field.value?.toString()?.replace('/', '-')) : new Date()}
                     />
                 )}
             />

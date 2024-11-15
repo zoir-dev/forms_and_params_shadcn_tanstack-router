@@ -1,10 +1,9 @@
 import { Controller, UseFormReturn, FieldValues, Path } from "react-hook-form"
-import { Combobox as ShadcnCombobox } from "@/components/ui/combobox"
 import { Label } from "../ui/label"
 import { cn } from "@/lib/utils"
 import ErrorMessage from "../ui/error-message"
-import { ClassNameValue } from "tailwind-merge"
 import { MonthPicker } from "../ui/month-picker"
+import { ClassNameValue } from "tailwind-merge"
 
 export function FormMonthPicker<IForm extends FieldValues>({
     name,
@@ -15,7 +14,6 @@ export function FormMonthPicker<IForm extends FieldValues>({
     hideError = false,
     wrapperClassName,
 }: IProps<IForm>) {
-
     const { control, formState: { errors } } = methods
     return (
         <fieldset className={cn("flex flex-col gap-2 w-full", wrapperClassName)}>
@@ -33,6 +31,7 @@ export function FormMonthPicker<IForm extends FieldValues>({
                         setValue={field.onChange}
                         disabled={field.disabled || disabled}
                         placeholder={placeholder}
+                        className="w-full"
                     />
                 )}
             />
